@@ -1,11 +1,14 @@
 - name: demo on loops
   hosts: local
   connection: local
+  vars:
+    packages:
+      - git
+      - mysql
+      - net-tools
   tasks:
-    - name: loop demo
-      debug: 
-        msg: "{{ item }}"
-      loop:
-        - "item 1"
-        - "item 2"
-        - "item 3"
+    - name: install packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
