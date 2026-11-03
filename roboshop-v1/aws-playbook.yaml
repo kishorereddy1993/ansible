@@ -1,0 +1,22 @@
+- name: Provision Roboshop Common Instance
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Run EC2 instance matching specifications
+      amazon.aws.ec2_instance:
+        image_id: "ami-0055977a6e828a4f4"
+        instance_type: "t3.micro"
+        vpc_subnet_id: "subnet-0377bddd95e2601f2"
+        security_groups:
+          - "sg-08b76e0c1e568935a"
+        tags:
+          Name: "roboshop-ansible"
+        wait: true
+      register: ec2_info  # <-- Captures the AWS response
+
+    - name: Display the instance details
+      ansible.builtin.debug:
+        msg: 
+          - "Instance ID: {{ ec2_info.instances[0].instance_id }}"
+          - "Private IP: {{ ec2_info.instances[0].private_ip_address }}"
