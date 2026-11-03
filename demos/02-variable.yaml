@@ -1,0 +1,11 @@
+- name: demo on variables
+  hosts: local
+  connection: local
+  vars:
+    course: "Ansible for DevOps"
+    trainer: "Siva Kishore Poreddy"
+    duration: "3 days"
+  tasks:
+    - name: Display the variables
+      ansible.builtin.debug:
+        msg: "Hi, I am learning {{ course }} from {{ trainer }} for {{ duration }}."
