@@ -1,23 +1,39 @@
-- name: Provision Roboshop Common Instance
+- name: Provision Roboshop EC2 instance
   hosts: localhost
+  connection: local
   gather_facts: false
 
-  tasks:
-    - name: Run EC2 instance matching specifications
-      amazon.aws.ec2_instance:
-        image_id: "ami-0055977a6e828a4f4"
-        instance_type: "t3.micro"
-        vpc_subnet_id: "subnet-0377bddd95e2601f2"
-        security_groups:
-          - "sg-08b76e0c1e568935a"
-        tags:
-          Name: "roboshop-ansible"
-        wait: true
-      register: ec2_info  # <-- Captures the AWS response
+  vars:
+    ec2_image_id: ami-0055977a6e828a4f4
+    ec2_instance_type: t3.micro
+    ec2_subnet_id: subnet-0377bddd95e2601f2
+    ec2_security_groups:
+      - sg-08b76e0c1e568935a
+    ec2_instance_name: roboshop-ansible
 
-    - name: Display the instance details
+  tasks:
+    - name: Ensure the EC2 instance is running
+      amazon.aws.ec2_instance:
+        image_id: "{{ ec2_image_id }}"
+        instance_type: "{{ ec2_instance_type }}"
+        vpc_subnet_id: "{{ ec2_subnet_id }}"
+        security_groups: "{{ ec2_security_groups }}"
+        key_name: "{{ ec2_key_name | default(omit) }}"
+        region: "{{ ec2_region | default(omit) }}"
+        exact_count: 1
+        filters:
+          "tag:Name": "{{ ec2_instance_name }}"
+        tags:
+          Name: "{{ ec2_instance_name }}"
+        wait: true
+      register: ec2_info
+
+    - name: Display instance details
       ansible.builtin.debug:
-        msg: 
-          - "Instance ID: {{ ec2_info.instances[0].instance_id }}"
-          - "Public IP: {{ ec2_info.instances[0].public_ip_address }}"
-          - "Private IP: {{ ec2_info.instances[0].private_ip_address }}"
+        msg:
+          instance_id: "{{ item.instance_id }}"
+          public_ip: "{{ item.public_ip_address | default('not assigned') }}"
+          private_ip: "{{ item.private_ip_address }}"
+      loop: "{{ ec2_info.instances }}"
+      loop_control:
+        label: "{{ item.instance_id }}"
