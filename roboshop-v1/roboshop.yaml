@@ -1,7 +1,6 @@
 - name: create ec2 instances and route53 records
   hosts: local
   connection: local
-  become: true
   vars: 
    instances: [ "mongodb", "redis", "catalogue", "user", "cart", "shipping", "payment", "frontend" ]
    action: create
@@ -16,7 +15,7 @@
       vpc_subnet_id: subnet-0377bddd95e2601f2
       security_groups: 
        - roboshop-common
-       - robotshop-{{ item }}
+       - roboshop-{{ item }}
       region: us-east-1
 
     loop: "{{ instances }}"
