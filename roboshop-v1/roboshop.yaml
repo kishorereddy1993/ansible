@@ -33,4 +33,5 @@
      type: A
      ttl: 300
      value: "{{ item.instances[0].private_ip_address }}"
-    loop: "{{ instances }}"
+    loop: "{{ ec2_output.results }}"
+    when: action == "create"
