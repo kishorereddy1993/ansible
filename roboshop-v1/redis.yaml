@@ -14,7 +14,7 @@
 
   - name: allow remote connections to redis
     replace: 
-      path: /etc/redis.conf
+      path: /etc/redis/redis.conf
       regexp: 'bind 127.0.0.1'
       replace: 'bind 0.0.0.0'
 
