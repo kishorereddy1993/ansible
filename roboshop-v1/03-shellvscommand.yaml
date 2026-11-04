@@ -1,17 +1,11 @@
 - name: shell vs command
   hosts: local
   connection: local
+  become: true
   tasks: 
   - name: test the command module
     ansible.builtin.command: cat /etc/passwd | grep roboshop
-    register: result
-  - name: test the shell module
-    ansible.builtin.shell: cat /etc/passwd | grep roboshop
-    register: result
-
-  - name: print the result of command module
-    ansible.builtin.debug:
-      msg: "{{ result.stdout_lines }}"
-  - name: print the result of shell module
-    ansible.builtin.debug:
-      msg: "{{ result.stdout_lines }}"
+    register: ec2_user_output
+  - name: display the result
+    debug:
+      msg: "{{ ec2_user_output }}"
