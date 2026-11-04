@@ -44,7 +44,7 @@
      record: "{{ item }}.{{ domain_name }}"
      ttl: 300
      type: A
-    loop: "{{ instances
+    loop: "{{ instances }}"
     when: action == "delete"
   
   - name: terminate ec2 instances
@@ -52,6 +52,10 @@
       state: absent
       name: "roboshop-{{ item }}"
       region: us-east-1
+      vpc_subnet_id: subnet-0377bddd95e2601f2
+      security_groups: 
+       - roboshop-common
+       - roboshop-{{ item }}
       wait: false
     loop: "{{ instances }}"
     when: action == "delete"
