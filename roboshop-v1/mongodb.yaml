@@ -3,7 +3,10 @@
   become: yes
   tasks:
     - name: copy mongodb repo file
-      ansible.builtin.copy:
+      copy:
         src: mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
-        state: started
+
+    - name: test the inventory
+      debug:
+        msg: {{ app_name }}
