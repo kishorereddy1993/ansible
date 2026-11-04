@@ -1,0 +1,17 @@
+- name: shell vs command
+  hosts: local
+  connection: local
+  tasks: 
+  - name: test the command module
+    ansible.builtin.command: cat /etc/passwd | grep roboshop
+    register: result
+  - name: test the shell module
+    ansible.builtin.shell: cat /etc/passwd | grep roboshop
+    register: result
+
+  - name: print the result of command module
+    ansible.builtin.debug:
+      msg: "{{ result.stdout_lines }}"
+  - name: print the result of shell module
+    ansible.builtin.debug:
+      msg: "{{ result.stdout_lines }}"
