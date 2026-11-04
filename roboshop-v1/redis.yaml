@@ -19,13 +19,13 @@
     replace: 'bind 0.0.0.0'
 
 - name: disable protected mode
-    lineinfile:
+  lineinfile:
       path: /etc/redis/redis.conf
       regexp: '^#?protected-mode yes'
       line: 'protected-mode no'
 
 - name: enable and start redis
-    service:
+  service:
       name: redis
       state: restarted
       enabled: yes
